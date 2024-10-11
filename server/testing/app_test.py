@@ -167,7 +167,7 @@ class TestApp:
 
             assert response.status_code == 400
             assert response.content_type == 'application/json'
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['errors'] == ["Description must be at least 20 characters long."]
 
     def test_404_no_power_to_patch(self):
         '''returns an error message if a PATCH request to /powers/<int:id> references a non-existent power'''
@@ -212,7 +212,7 @@ class TestApp:
                 }
             )
 
-            assert response.status_code == 200
+            assert response.status_code == 201
             assert response.content_type == 'application/json'
             response = response.json
 
@@ -249,4 +249,4 @@ class TestApp:
 
             assert response.status_code == 400
             assert response.content_type == 'application/json'
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['errors'] == ["Strength must be one of: Strong, Weak, Average."]

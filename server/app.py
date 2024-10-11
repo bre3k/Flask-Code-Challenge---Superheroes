@@ -22,9 +22,9 @@ class Heroes(Resource):
 # Hero by ID Resource
 class HeroById(Resource):
     def get(self, id):
-        hero = Hero.query.get(id)
+        hero = db.session.get(Hero, id)
         if hero:
-            return hero.to_dict(only=('id', 'name', 'super_name', 'powers')), 200
+            return hero.to_dict(only=('id', 'name', 'super_name', 'hero_powers')), 200
         else:
             return {'error': 'Hero not found'}, 404
 
@@ -36,8 +36,15 @@ class Powers(Resource):
 
 # Power by ID Resource
 class PowerById(Resource):
+    def get(self, id):
+        power = db.session.get(Power, id)
+        if power:
+            return power.to_dict(only=('id', 'name', 'description')), 200
+        else:
+            return {'error': 'Power not found'}, 404
+
     def patch(self, id):
-        power = Power.query.get(id)
+        power = db.session.get(Power, id)
         if power:
             data = request.get_json()
             try:
@@ -52,7 +59,6 @@ class PowerById(Resource):
         else:
             return {'error': 'Power not found'}, 404
 
-
 # HeroPowers Resource
 class HeroPowers(Resource):
     def post(self):
@@ -65,7 +71,7 @@ class HeroPowers(Resource):
             )
             db.session.add(new_hero_power)
             db.session.commit()
-            return new_hero_power.to_dict(), 201
+            return new_hero_power.to_dict(), 201  # Ensure status 201 Created
         except ValueError as e:
             return {'errors': [str(e)]}, 400
 
